@@ -3,9 +3,9 @@ var exec = require('cordova/exec');
 /** 
  * enable privacy screen
  */
-exports.activate = function(arg, success, error) {
-  exec(success, error, "PrivacyScreenPlugin", "activate", [arg]);
+exports.activate = function(success, error) {
+  exec(success, error, "PrivacyScreenPlugin", "activate", []);
 };
-exports.deactivate = function(arg, success, error) {
-  exec(success, error, "PrivacyScreenPlugin", "deactivate", [arg]);
+exports.deactivate = function(success, error) {
+  exec(success, error, "PrivacyScreenPlugin", "deactivate", []);
 };

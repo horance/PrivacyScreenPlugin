@@ -25,10 +25,23 @@ static UIImageView *imageView;
 
 - (void)activate:(CDVInvokedUrlCommand *)cmd {
     _enabled = true;
+
+    CDVPluginResult *result = nil;
+    
+    result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"enabled"];
+    
+    [self.commandDelegate sendPluginResult:result callbackId:cmd.callbackId];
 }
 
 - (void)deactivate:(CDVInvokedUrlCommand *)cmd {
     _enabled = false;
+    
+    CDVPluginResult *result = nil;
+    
+    result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"disabled"];
+    
+    [self.commandDelegate sendPluginResult:result callbackId:cmd.callbackId];
+
 }
 
 
@@ -43,9 +56,6 @@ static UIImageView *imageView;
 
 - (void)onAppDidBecomeActive:(UIApplication *)application
 {
-  if (!_enabled) {
-      return;
-  }
   if (UIScreen.mainScreen.captured) {
     return;
   }
@@ -58,6 +68,9 @@ static UIImageView *imageView;
 
 - (void)onAppWillResignActive:(UIApplication *)application
 {
+    if (!_enabled) {
+        return;
+    }
   CDVViewController *vc = (CDVViewController*)self.viewController;
   NSString *imgName = [self getImageName:self.viewController.interfaceOrientation delegate:(id<CDVScreenOrientationDelegate>)vc device:[self getCurrentDevice]];
   UIImage *splash = [UIImage imageNamed:imgName];
