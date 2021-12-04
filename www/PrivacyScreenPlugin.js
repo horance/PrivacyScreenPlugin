@@ -1,8 +1,11 @@
-//var exec = require('cordova/exec');
+var exec = require('cordova/exec');
 
 /** 
- * Not sure this will even have a JS API
+ * enable privacy screen
  */
-//exports.activate = function(arg, success, error) {
-  //exec(success, error, "PrivacyScreenPlugin", "activate", [arg]);
-//};
+exports.activate = function(arg, success, error) {
+  exec(success, error, "PrivacyScreenPlugin", "activate", [arg]);
+};
+exports.deactivate = function(arg, success, error) {
+  exec(success, error, "PrivacyScreenPlugin", "deactivate", [arg]);
+};

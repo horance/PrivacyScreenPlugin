@@ -6,21 +6,15 @@
  */
 package org.devgeeks.privacyscreen;
 
-import org.apache.cordova.CordovaPlugin;
-import org.apache.cordova.CallbackContext;
-import org.apache.cordova.CordovaInterface;
-import org.apache.cordova.CordovaWebView;
-
 import android.app.Activity;
-import android.view.Window;
 import android.view.WindowManager;
 
-import org.json.JSONArray;
+import org.apache.cordova.CallbackContext;
+import org.apache.cordova.CordovaArgs;
+import org.apache.cordova.CordovaInterface;
+import org.apache.cordova.CordovaPlugin;
+import org.apache.cordova.CordovaWebView;
 import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.content.Context;
-import android.os.Bundle;
 
 /**
  * This class sets the FLAG_SECURE flag on the window to make the app
@@ -33,5 +27,39 @@ public class PrivacyScreenPlugin extends CordovaPlugin {
     super.initialize(cordova, webView);
     Activity activity = this.cordova.getActivity();
     activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
+  }
+
+  @Override
+  public boolean execute(String action, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+    switch(action) {
+      case "activate":
+        return activate(args, callbackContext);
+      case "deactivate":
+        return deactivate(args, callbackContext);
+    }
+    return false;
+  }
+
+  private boolean deactivate(CordovaArgs args, CallbackContext callbackContext) {
+    try {
+      Activity activity = this.cordova.getActivity();
+      activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
+      callbackContext.success();
+      return true;
+    } catch (Exception e) {
+      callbackContext.error("error clear flags: " + e.getMessage());
+      return false;
+    }
+  }
+
+  private boolean activate(CordovaArgs args, CallbackContext callbackContext) {
+    try {
+      Activity activity = this.cordova.getActivity();
+      activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
+      return true;
+    } catch (Exception e) {
+      callbackContext.error("error add flags: " + e.getMessage());
+      return false;
+    }
   }
 }

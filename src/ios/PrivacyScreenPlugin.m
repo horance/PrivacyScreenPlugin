@@ -12,15 +12,43 @@ static UIImageView *imageView;
 
 - (void)pluginInitialize
 {
+  _enabled = true;
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onAppDidBecomeActive:)
                                                name:UIApplicationDidBecomeActiveNotification object:nil];
 
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onAppWillResignActive:)
                                                name:UIApplicationWillResignActiveNotification object:nil];
+
+  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onScreenCaptureChange:)
+                                               name:UIScreenCapturedDidChangeNotification object:nil];
+}
+
+- (void)activate:(CDVInvokedUrlCommand *)cmd {
+    _enabled = true;
+}
+
+- (void)deactivate:(CDVInvokedUrlCommand *)cmd {
+    _enabled = false;
+}
+
+
+- (void)onScreenCaptureChange:(UIApplication *)application
+{
+  if (UIScreen.mainScreen.captured) {
+      [ self onAppWillResignActive: application ];
+  } else {
+      [ self onAppDidBecomeActive: application ];
+  }
 }
 
 - (void)onAppDidBecomeActive:(UIApplication *)application
 {
+  if (!_enabled) {
+      return;
+  }
+  if (UIScreen.mainScreen.captured) {
+    return;
+  }
   if (imageView == NULL) {
     self.viewController.view.window.hidden = NO;
   } else {
