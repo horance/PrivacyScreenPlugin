@@ -41,21 +41,32 @@ public class PrivacyScreenPlugin extends CordovaPlugin {
   }
 
   private boolean deactivate(CordovaArgs args, CallbackContext callbackContext) {
+    Activity activity = this.cordova.getActivity();
     try {
-      Activity activity = this.cordova.getActivity();
-      activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
+      activity.runOnUiThread(new Runnable() {
+        @Override
+        public void run() {
+          activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
+        }
+      });
       callbackContext.success();
       return true;
     } catch (Exception e) {
-      callbackContext.error("error clear flags: " + e.getMessage());
+      callbackContext.error("error add flags: " + e.getMessage());
       return false;
     }
   }
 
   private boolean activate(CordovaArgs args, CallbackContext callbackContext) {
+    Activity activity = this.cordova.getActivity();
     try {
-      Activity activity = this.cordova.getActivity();
-      activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
+      activity.runOnUiThread(new Runnable() {
+        @Override
+        public void run() {
+          activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
+        }
+      });
+      callbackContext.success();
       return true;
     } catch (Exception e) {
       callbackContext.error("error add flags: " + e.getMessage());
